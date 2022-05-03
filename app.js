@@ -1,4 +1,5 @@
 const express = require('express')
+var cors = require('cors')
 const bodyParser = require('body-parser')
 const mysql = require('mysql')
 
@@ -8,6 +9,8 @@ const port = process.env.PORT || 5000
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(bodyParser.json())
+
+app.use(cors())
 
 // mysql
 const pool = mysql.createPool({
