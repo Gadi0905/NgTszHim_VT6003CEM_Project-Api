@@ -17,7 +17,7 @@ const pool = mysql.createPool({
     connectionLimit: 10,
     host           : 'localhost',
     user           : 'root',
-    password       : '',
+    password       : 'secret',
     database       : 'vt6003cem_webapi',
 })
 
@@ -203,6 +203,27 @@ app.post('/employee', (req, res)=> {
         })
 
         console.log(req.body)
+    })
+})
+
+app.get('/employee/login', (req, res)=> {
+    
+    pool.getConnection((err, connection)=>{
+        if(err) throw err
+        console.log(`connected as id ${connection.threadId}`)
+
+        const { email, password } = req.body
+        
+        connection.query('SELECT * FROM employee WHERE email = ? AND password = ?', [email, password], (err, rows)=>{
+            connection.release()    // return the connection to pool
+
+            if(!err) {
+                res.send(rows)
+                res.send("login successful")
+            } else {
+                console.log("fail login")
+            }
+        })
     })
 })
 
