@@ -252,108 +252,108 @@ app.put('/employee', (req, res)=> {
 
 // *********************************************************************************************************************************************************************
 
-// get all user record
-app.get('/user', (req, res)=> {
+// // get all user record
+// app.get('/user', (req, res)=> {
     
-    pool.getConnection((err, connection)=>{
-        if(err) throw err
-        console.log(`connected as id ${connection.threadId}`)
+//     pool.getConnection((err, connection)=>{
+//         if(err) throw err
+//         console.log(`connected as id ${connection.threadId}`)
         
-        connection.query('SELECT * FROM user', (err, rows)=>{
-            connection.release()    // return the connection to pool
+//         connection.query('SELECT * FROM user', (err, rows)=>{
+//             connection.release()    // return the connection to pool
 
-            if(!err) {
-                res.send(rows)
-            } else {
-                console.log(err)
-            }
-        })
-    })
-})
+//             if(!err) {
+//                 res.send(rows)
+//             } else {
+//                 console.log(err)
+//             }
+//         })
+//     })
+// })
 
-// get a user record by id
-app.get('/user/:id', (req, res)=> {
+// // get a user record by id
+// app.get('/user/:id', (req, res)=> {
     
-    pool.getConnection((err, connection)=>{
-        if(err) throw err
-        console.log(`connected as id ${connection.threadId}`)
+//     pool.getConnection((err, connection)=>{
+//         if(err) throw err
+//         console.log(`connected as id ${connection.threadId}`)
         
-        connection.query('SELECT * FROM user WHERE id = ?', [req.params.id], (err, rows)=>{
-            connection.release()    // return the connection to pool
+//         connection.query('SELECT * FROM user WHERE id = ?', [req.params.id], (err, rows)=>{
+//             connection.release()    // return the connection to pool
 
-            if(!err) {
-                res.send(rows)
-            } else {
-                console.log(err)
-            }
-        })
-    })
-})
+//             if(!err) {
+//                 res.send(rows)
+//             } else {
+//                 console.log(err)
+//             }
+//         })
+//     })
+// })
 
-// delete a user record by id
-app.delete('/user/:id', (req, res)=> {
+// // delete a user record by id
+// app.delete('/user/:id', (req, res)=> {
     
-    pool.getConnection((err, connection)=>{
-        if(err) throw err
-        console.log(`connected as id ${connection.threadId}`)
+//     pool.getConnection((err, connection)=>{
+//         if(err) throw err
+//         console.log(`connected as id ${connection.threadId}`)
         
-        connection.query('DELETE FROM user WHERE id = ?', [req.params.id], (err, rows)=>{
-            connection.release()    // return the connection to pool
+//         connection.query('DELETE FROM user WHERE id = ?', [req.params.id], (err, rows)=>{
+//             connection.release()    // return the connection to pool
 
-            if(!err) {
-                res.send(`user with the record id:${[req.params.id]} has been removed.`)
-            } else {
-                console.log(err)
-            }
-        })
-    })
-})
+//             if(!err) {
+//                 res.send(`user with the record id:${[req.params.id]} has been removed.`)
+//             } else {
+//                 console.log(err)
+//             }
+//         })
+//     })
+// })
 
-// insert a user record
-app.post('/user', (req, res)=> {
+// // insert a user record
+// app.post('/user', (req, res)=> {
     
-    pool.getConnection((err, connection)=>{
-        if(err) throw err
-        console.log(`connected as id ${connection.threadId}`)
+//     pool.getConnection((err, connection)=>{
+//         if(err) throw err
+//         console.log(`connected as id ${connection.threadId}`)
         
-        const params = req.body
+//         const params = req.body
 
-        connection.query('INSERT INTO user SET ?', params, (err, rows)=>{
-            connection.release()    // return the connection to pool
+//         connection.query('INSERT INTO user SET ?', params, (err, rows)=>{
+//             connection.release()    // return the connection to pool
 
-            if(!err) {
-                res.send(`user with the record name:${[params.name]} has been added.`)
-            } else {
-                console.log(err)
-            }
-        })
+//             if(!err) {
+//                 res.send(`user with the record name:${[params.name]} has been added.`)
+//             } else {
+//                 console.log(err)
+//             }
+//         })
 
-        console.log(req.body)
-    })
-})
+//         console.log(req.body)
+//     })
+// })
 
-// update a user record
-app.put('/user', (req, res)=> {
+// // update a user record
+// app.put('/user', (req, res)=> {
     
-    pool.getConnection((err, connection)=>{
-        if(err) throw err
-        console.log(`connected as id ${connection.threadId}`)
+//     pool.getConnection((err, connection)=>{
+//         if(err) throw err
+//         console.log(`connected as id ${connection.threadId}`)
         
-        const { id, name, age, sex, image, employee_id } = req.body
+//         const { id, name, age, sex, image, employee_id } = req.body
 
-        connection.query('UPDATE user SET name = ?, age = ?, sex = ?, image = ?, employee_id = ? WHERE id = ?', [name, age, sex, image, employee_id, id], (err, rows)=>{
-            connection.release()    // return the connection to pool
+//         connection.query('UPDATE user SET name = ?, age = ?, sex = ?, image = ?, employee_id = ? WHERE id = ?', [name, age, sex, image, employee_id, id], (err, rows)=>{
+//             connection.release()    // return the connection to pool
 
-            if(!err) {
-                res.send(`user with the record name:${[name]} has been updated.`)
-            } else {
-                console.log(err)
-            }
-        })
+//             if(!err) {
+//                 res.send(`user with the record name:${[name]} has been updated.`)
+//             } else {
+//                 console.log(err)
+//             }
+//         })
 
-        console.log(req.body)
-    })
-})
+//         console.log(req.body)
+//     })
+// })
 
 // listen on env port or 5000
 app.listen(port, ()=> console.log(`listen on port ${port}`))
