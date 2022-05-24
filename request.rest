@@ -1,0 +1,30 @@
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "email": "Kyle@gmail.com",
+    "password": "123"
+}
+
+###
+
+GET http://localhost:5000/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Ikt5bGVAZ21haWwuY29tIiwicGFzc3dvcmQiOiIxMjMiLCJpYXQiOjE2NTMyOTcwNzIsImV4cCI6MTY1MzI5NzA4N30.wLPQJT2y5V1OBtfm5Mc69fcx-f0fMz-m7trgMelMHEU
+
+###
+
+POST http://localhost:5000/token
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Ikt5bGVAZ21haWwuY29tIiwicGFzc3dvcmQiOiIxMjMiLCJpYXQiOjE2NTMyOTU4Nzl9.LUrOyTg0tCUURVcpZk7ycMYtWUugmjcxNcTfuAYHwqs"
+}
+
+###
+
+DELETE http://localhost:5000/logout
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Ikt5bGVAZ21haWwuY29tIiwicGFzc3dvcmQiOiIxMjMiLCJpYXQiOjE2NTMyOTU4Nzl9.LUrOyTg0tCUURVcpZk7ycMYtWUugmjcxNcTfuAYHwqs"
+}
