@@ -272,7 +272,7 @@ app.get('/dog/:id', (req, res) => {
 })
 
 // delete a dog record by id
-app.delete('/dog/:id', (req, res) => {
+app.delete('/dog/:id', authenticateToken, (req, res) => {
 
     pool.getConnection((err, connection) => {
         if (err) throw err
@@ -291,7 +291,7 @@ app.delete('/dog/:id', (req, res) => {
 })
 
 // insert a dog record
-app.post('/dog', (req, res) => {
+app.post('/dog', authenticateToken, (req, res) => {
 
     pool.getConnection((err, connection) => {
         if (err) throw err
@@ -314,7 +314,7 @@ app.post('/dog', (req, res) => {
 })
 
 // update a dog record
-app.put('/dog', (req, res) => {
+app.put('/dog', authenticateToken, (req, res) => {
 
     pool.getConnection((err, connection) => {
         if (err) throw err
