@@ -1,17 +1,26 @@
+// dotenv
 require('dotenv').config()
-
+// cors
 var cors = require('cors')
+// express
 const express = require('express')
+// bodyParser
 const bodyParser = require('body-parser')
+// mysql
 const mysql = require('mysql')
+// jsonwebtoken
 const jwt = require('jsonwebtoken')
-
+// app
 const app = express()
+// port
 const port = process.env.PORT || 5000
-
+// use bodyParser urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
+// use bodyParser json
 app.use(bodyParser.json())
+// use express json
 app.use(express.json())
+// use cors
 app.use(cors())
 
 // mysql
@@ -24,42 +33,9 @@ const pool = mysql.createPool({
 })
 
 // *********************************************************************************************************************************************************************
-
+// refreshTokens
 let refreshTokens = []
-
-const posts = [
-    { email: 'Kyle@gmail.com', password: '123' },
-    { email: 'Jim@gmail.com', password: '123' }
-]
-
-// app.post('/employee/login', (req, res) => {
-
-//     pool.getConnection((err, connection) => {
-//         if (err) throw err
-//         const { email, password } = req.body
-
-//         connection.query('SELECT * FROM employee WHERE email = ? AND password = ?', [email, password], (err, rows) => {
-//             connection.release()    // return the connection to pool
-//             if (!err) {
-//                 res.send(rows)
-//             } else {
-//                 console.log(err)
-//             }
-//         })
-//     })
-// })
-
-// app.post('/login', (req, res) => {
-//     const email = req.body.email
-//     const password = req.body.password
-//     const user = { email: email, password: password }
-
-//     const accessToken =  jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '25s' })
-//     const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
-//     refreshTokens.push(refreshToken)
-//     res.json({ accessToken: accessToken , refreshToken: refreshToken})
-// })
-
+// login
 app.post('/login', (req, res) => {
 
     pool.getConnection((err, connection) => {
@@ -76,8 +52,6 @@ app.post('/login', (req, res) => {
 
                     const accessToken = generateAccessToken(user)
                     const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
-                    // refreshTokens.push(refreshToken)
-                    // res.json({ accessToken: accessToken, refreshToken: refreshToken })
                     res.json({ accessToken: accessToken })
                 }
             } else {
@@ -87,11 +61,11 @@ app.post('/login', (req, res) => {
     })
 })
 
+// posts
 app.get('/posts', authenticateToken, (req, res) => {
     res.send('login ok')
-    // res.json(posts.filter(post => post.email === req.user.email))
 })
-
+// refreshToken to get accessToken
 app.post('/token', (req, res) => {
     const refreshToken = req.body.token
     if (refreshToken == null) return res.sendStatus(401)
@@ -104,11 +78,13 @@ app.post('/token', (req, res) => {
     })
 })
 
+// logout
 app.delete('/logout', (req, res) => {
     refreshTokens = refreshTokens.filter(token => token !== req.body.token)
     res.sendStatus(204)
 })
 
+// authenticate Token
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization']
     const token = authHeader && authHeader.split(' ')[1]
@@ -121,8 +97,8 @@ function authenticateToken(req, res, next) {
     })
 }
 
+// generate Access Token
 function generateAccessToken(user) {
-    // return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '25s' })
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET)
 }
 
@@ -233,14 +209,33 @@ app.put('/employee', (req, res) => {
 
 // *********************************************************************************************************************************************************************
 
-// get all dog record
-app.get('/dog', (req, res) => {
+// get all dog ASC record
+app.get('/dogASC', (req, res) => {
 
     pool.getConnection((err, connection) => {
         if (err) throw err
         console.log(`connected as id ${connection.threadId}`)
 
-        connection.query('SELECT * FROM dog', (err, rows) => {
+        connection.query('SELECT * FROM dog ORDER BY age ASC', (err, rows) => {
+            connection.release()    // return the connection to pool
+
+            if (!err) {
+                res.send(rows)
+            } else {
+                console.log(err)
+            }
+        })
+    })
+})
+
+// get all dog Desc record
+app.get('/dogDESC', (req, res) => {
+
+    pool.getConnection((err, connection) => {
+        if (err) throw err
+        console.log(`connected as id ${connection.threadId}`)
+
+        connection.query('SELECT * FROM dog ORDER BY age DESC', (err, rows) => {
             connection.release()    // return the connection to pool
 
             if (!err) {
@@ -253,13 +248,13 @@ app.get('/dog', (req, res) => {
 })
 
 // get a dog record by id
-app.get('/dog/:id', (req, res) => {
+app.get('/dog/:name', (req, res) => {
 
     pool.getConnection((err, connection) => {
         if (err) throw err
         console.log(`connected as id ${connection.threadId}`)
 
-        connection.query('SELECT * FROM dog WHERE id = ?', [req.params.id], (err, rows) => {
+        connection.query('SELECT * FROM dog WHERE name = ?', [req.params.name], (err, rows) => {
             connection.release()    // return the connection to pool
 
             if (!err) {
@@ -335,111 +330,6 @@ app.put('/dog', authenticateToken, (req, res) => {
         console.log(req.body)
     })
 })
-
-// *********************************************************************************************************************************************************************
-
-// // get all user record
-// app.get('/user', (req, res)=> {
-
-//     pool.getConnection((err, connection)=>{
-//         if(err) throw err
-//         console.log(`connected as id ${connection.threadId}`)
-
-//         connection.query('SELECT * FROM user', (err, rows)=>{
-//             connection.release()    // return the connection to pool
-
-//             if(!err) {
-//                 res.send(rows)
-//             } else {
-//                 console.log(err)
-//             }
-//         })
-//     })
-// })
-
-// // get a user record by id
-// app.get('/user/:id', (req, res)=> {
-
-//     pool.getConnection((err, connection)=>{
-//         if(err) throw err
-//         console.log(`connected as id ${connection.threadId}`)
-
-//         connection.query('SELECT * FROM user WHERE id = ?', [req.params.id], (err, rows)=>{
-//             connection.release()    // return the connection to pool
-
-//             if(!err) {
-//                 res.send(rows)
-//             } else {
-//                 console.log(err)
-//             }
-//         })
-//     })
-// })
-
-// // delete a user record by id
-// app.delete('/user/:id', (req, res)=> {
-
-//     pool.getConnection((err, connection)=>{
-//         if(err) throw err
-//         console.log(`connected as id ${connection.threadId}`)
-
-//         connection.query('DELETE FROM user WHERE id = ?', [req.params.id], (err, rows)=>{
-//             connection.release()    // return the connection to pool
-
-//             if(!err) {
-//                 res.send(`user with the record id:${[req.params.id]} has been removed.`)
-//             } else {
-//                 console.log(err)
-//             }
-//         })
-//     })
-// })
-
-// // insert a user record
-// app.post('/user', (req, res)=> {
-
-//     pool.getConnection((err, connection)=>{
-//         if(err) throw err
-//         console.log(`connected as id ${connection.threadId}`)
-
-//         const params = req.body
-
-//         connection.query('INSERT INTO user SET ?', params, (err, rows)=>{
-//             connection.release()    // return the connection to pool
-
-//             if(!err) {
-//                 res.send(`user with the record name:${[params.name]} has been added.`)
-//             } else {
-//                 console.log(err)
-//             }
-//         })
-
-//         console.log(req.body)
-//     })
-// })
-
-// // update a user record
-// app.put('/user', (req, res)=> {
-
-//     pool.getConnection((err, connection)=>{
-//         if(err) throw err
-//         console.log(`connected as id ${connection.threadId}`)
-
-//         const { id, name, age, sex, image, employee_id } = req.body
-
-//         connection.query('UPDATE user SET name = ?, age = ?, sex = ?, image = ?, employee_id = ? WHERE id = ?', [name, age, sex, image, employee_id, id], (err, rows)=>{
-//             connection.release()    // return the connection to pool
-
-//             if(!err) {
-//                 res.send(`user with the record name:${[name]} has been updated.`)
-//             } else {
-//                 console.log(err)
-//             }
-//         })
-
-//         console.log(req.body)
-//     })
-// })
 
 // listen on env port or 5000
 app.listen(port, () => console.log(`listen on port ${port}`))
