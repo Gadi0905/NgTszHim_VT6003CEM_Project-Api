@@ -1,5 +1,5 @@
-how to install  
+#how to install  
 npm install  
   
-how to start  
+#how to start  
 npm start  
